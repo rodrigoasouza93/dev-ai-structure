@@ -1,7 +1,7 @@
 # Bliss Task Execution
 
 Projeto agregador de atividades que envolvem múltiplos projetos Bliss
-(localizados em `/Users/rodrigosouza/Documents/bliss/`).
+(localizados no diretório de trabalho local, ex.: `~/Documents/bliss/`).
 
 O fluxo de desenvolvimento de features é orquestrado por **skills** em
 `.claude/skills/`, com gates de aprovação explícitos entre cada fase.

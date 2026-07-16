@@ -1,7 +1,7 @@
 # Instruções para Agentes — Bliss Task Execution
 
 Este é o projeto agregador de atividades que envolvem múltiplos projetos Bliss.
-Os projetos ficam em `/Users/rodrigosouza/Documents/bliss/`.
+Os projetos ficam no diretório de trabalho local (ex.: `~/Documents/bliss/`).
 
 ## Primeiro passo
 
