@@ -1,0 +1,14 @@
+# Conteúdo de trabalho / privado — não versionar
+tasks/
+Memory/
+
+# Configuração local do Claude Code (caminhos e referências internas)
+.claude/settings.local.json
+
+# Planos internos (modo Plano)
+.codex/plans/
+
+# Ruído do SO / build
+.DS_Store
+__pycache__/
+*.pyc
