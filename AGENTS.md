@@ -51,19 +51,32 @@ oferecer esse comando ou deixe o modelo
 acioná-la pelo contexto):
 
 ```
-PRD (skill create-prd)
+Ideação (skill create-ideation)   [opcional — quando a ideia/direção ainda não está definida]
   → aprovação do usuário
-    → TechSpec (skill create-techspec)
+    → PRD (skill create-prd)
       → aprovação do usuário
-        → Tasks (skill create-tasks)
+        → TechSpec (skill create-techspec)
           → aprovação do usuário
-            → Implementação (skill execute-task) + agente task-reviewer
-              → QA (skill execute-qa)
-                → Bugfix se necessário (skill execute-bugfix)
-                  → Code Review (skill execute-review)
+            → Tasks (skill create-tasks)
+              → aprovação do usuário
+                → Implementação (skill execute-task) + agente task-reviewer
+                  → QA (skill execute-qa)
+                    → Bugfix se necessário (skill execute-bugfix)
+                      → Code Review (skill execute-review)
 ```
 
 **Gate de aprovação:** cada documento deve conter `Status: APROVADO PELO USUÁRIO` antes da próxima fase. Nunca avance sem esta confirmação.
+
+## Estrutura de ideação
+
+Explorações de ideias (fase anterior ao PRD) ficam em `./ideas/[nome-em-kebab-case]/`:
+
+```
+ideas/[nome]/
+└── idea.md
+```
+
+Uma vez aprovada (`Status: APROVADO PELO USUÁRIO`), a ideia vira insumo para a skill `create-prd`.
 
 ## Estrutura de tasks
 
@@ -86,10 +99,11 @@ tasks/prd-[nome]/
 
 Use a skill correspondente quando o trabalho segue um fluxo repetível.
 
-### Skills do fluxo de feature (PRD → TechSpec → Tasks → Implementação → QA → Bugfix → Review)
+### Skills do fluxo de feature (Ideação → PRD → TechSpec → Tasks → Implementação → QA → Bugfix → Review)
 
 | Skill | Acionar para… | Não usar se… |
 |-------|--------------|--------------|
+| `create-ideation` | Explorar ideias/soluções/projetos possíveis antes do PRD; divergir, comparar trade-offs e recomendar; gerar `idea.md` | O problema já está definido e você só precisa de requisitos (use `create-prd`) |
 | `create-prd` | Iniciar feature, capturar requisitos, gerar `prd.md` | Já existe PRD aprovado ou é só ajuste técnico |
 | `create-techspec` | Desenhar arquitetura/decisões técnicas a partir do PRD aprovado | `prd.md` não está `APROVADO PELO USUÁRIO` |
 | `create-tasks` | Quebrar a feature em tarefas a partir de PRD + TechSpec aprovados | PRD ou TechSpec não aprovados |
