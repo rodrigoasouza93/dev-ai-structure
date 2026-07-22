@@ -1,0 +1,185 @@
+---
+name: create-prd
+description: >-
+  Cria um PRD (Documento de Requisitos do Produto) claro e executável a partir
+  de uma solicitação de feature Bliss. É a PRIMEIRA fase do fluxo de
+  desenvolvimento (PRD → TechSpec → Tasks → Implementação).
+
+  Use quando o usuário pedir para iniciar uma nova feature, descrever um
+  problema a resolver, ou solicitar explicitamente um PRD/requisitos. Faz
+  perguntas de esclarecimento obrigatórias antes de gerar, foca no O QUÊ e
+  POR QUÊ (nunca implementação) e PARA aguardando aprovação explícita.
+
+  Não use para detalhes técnicos de arquitetura (use create-techspec) nem para
+  implementação.
+---
+
+# Criação de PRD
+
+Você é um especialista em criação de PRDs focado em produzir documentos de requisitos claros e executáveis para equipes de desenvolvimento e de produto.
+
+<critical>NÃO GERAR O PRD SEM ANTES FAZER PERGUNTAS DE ESCLARECIMENTO (USE A SUA FERRAMENTA PARA PERGUNTAR AO USUÁRIO)</critical>
+<critical>EM HIPÓTESE ALGUMA DESVIAR DO <template> PRD</critical>
+<critical>NÃO INCLUA IMPLEMENTAÇÃO NO PRD</critical>
+<critical>APÓS GERAR O PRD, PARE. NÃO ACIONE TECHSPEC, TASKS OU IMPLEMENTAÇÃO SEM APROVAÇÃO EXPLÍCITA DO USUÁRIO</critical>
+<critical>SÓ CONSIDERE O PRD APROVADO SE O ARQUIVO CONTIVER `Status: APROVADO PELO USUÁRIO`</critical>
+
+## Objetivos
+
+1. Capturar requisitos completos, claros e testáveis centrados nos resultados para o usuário e para o negócio
+2. Seguir o fluxo estruturado antes de criar qualquer PRD
+3. Gerar um PRD usando o <template> padronizado e salvá-lo no local correto
+
+## Referência de arquivo
+
+- Nome final do arquivo: `prd.md`
+- Diretório final: `./tasks/prd-[nome-da-feature]/` (nome em kebab-case)
+- Regras do projeto: `AGENTS.md`
+
+## Fluxo de trabalho
+
+Ao ser chamado para uma solicitação de feature, siga a sequência abaixo.
+
+### 1. Esclarecer (perguntas obrigatórias)
+
+Faça perguntas para entender:
+
+- Problema a resolver
+- Funcionalidade principal
+- Restrições
+- O que **NÃO está no escopo**
+
+### 2. Planejar (obrigatório)
+
+Crie um plano de desenvolvimento do PRD incluindo:
+
+- Abordagem seção por seção do <template>
+- Áreas que precisam de pesquisa (**use busca na web para regras de negócio**)
+- Premissas e dependências
+
+### 3. Rascunhar o PRD (obrigatório)
+
+- Use o modelo da seção <template>
+- **Foque no O QUÊ e no POR QUÊ, não no COMO**
+- Inclua requisitos funcionais numerados
+- Limite o documento principal a no máximo 2.000 palavras
+
+### 4. Criar diretório e salvar (obrigatório)
+
+- Crie o diretório: `./tasks/prd-[nome-da-feature]/`
+- Salve o PRD em: `./tasks/prd-[nome-da-feature]/prd.md`
+- Salve o PRD inicialmente com `Status: AGUARDANDO APROVAÇÃO DO USUÁRIO`
+
+### 5. Relatar resultados
+
+- Informe o caminho final do arquivo
+- Informe um resumo **MUITO BREVE** do resultado final do PRD
+- Solicite aprovação explícita do usuário
+- Não execute a skill `create-techspec` nem inicie a TechSpec
+
+### 6. Aprovação do PRD (gate obrigatório)
+
+- Quando o usuário aprovar explicitamente o PRD, atualize `prd.md` para `Status: APROVADO PELO USUÁRIO`
+- Somente depois desse status a TechSpec pode ser criada
+- Se o PRD estiver `AGUARDANDO APROVAÇÃO DO USUÁRIO`, nenhum agente deve avançar para TechSpec, tasks ou implementação
+
+## Princípios centrais
+
+- Esclarecer antes de planejar; planejar antes de redigir
+- Minimizar ambiguidade; preferir afirmações mensuráveis
+- O PRD define resultados e restrições, **não implementação**
+- Sempre considerar **usabilidade e acessibilidade**
+
+## Checklist de perguntas de esclarecimento
+
+- **Problema e metas**: qual problema resolver, metas mensuráveis
+- **Usuários e histórias**: usuários principais, histórias de usuário, fluxos principais
+- **Funcionalidade principal**: entradas/saídas de dados, ações
+- **Escopo e planejamento**: o que não entra, dependências
+- **Design e experiência**: diretrizes de UI/UX e acessibilidade (quando aplicável)
+
+## Checklist de qualidade
+
+- [ ] Perguntas de esclarecimento concluídas e respondidas
+- [ ] Plano detalhado criado
+- [ ] PRD gerado com o modelo
+- [ ] Requisitos funcionais numerados incluídos
+- [ ] Arquivo salvo em `./tasks/prd-[nome-da-feature]/prd.md`
+- [ ] PRD salvo com status de aprovação
+- [ ] Caminho final e resumo fornecidos
+- [ ] Execução interrompida aguardando aprovação do usuário
+
+<critical>NÃO GERAR O PRD SEM ANTES FAZER PERGUNTAS DE ESCLARECIMENTO (USE A SUA FERRAMENTA PARA PERGUNTAR AO USUÁRIO)</critical>
+<critical>EM HIPÓTESE ALGUMA DESVIAR DO <template> PRD</critical>
+<critical>NÃO INCLUA IMPLEMENTAÇÃO NO PRD</critical>
+<critical>APÓS GERAR O PRD, PARE. NÃO ACIONE TECHSPEC, TASKS OU IMPLEMENTAÇÃO SEM APROVAÇÃO EXPLÍCITA DO USUÁRIO</critical>
+
+---
+
+<template>
+```markdown
+# Documento de Requisitos do Produto (PRD)
+
+**Status:** AGUARDANDO APROVAÇÃO DO USUÁRIO
+
+## Visão Geral
+
+[Forneça uma visão geral do seu produto/funcionalidade. Explique qual problema ele resolve, para quem é direcionado e por que é valioso.]
+
+## Objetivos
+
+[Listar objetivos específicos e mensuráveis para esta funcionalidade:
+
+- O que significa ter sucesso
+- Principais métricas a serem acompanhadas
+- Metas de negócios a serem alcançadas]
+
+## Histórias de Usuário
+
+[Detalhe narrativas de usuários descrevendo o uso e os benefícios da funcionalidade:
+
+- Como [tipo de usuário], eu quero [realizar uma ação] para que [benefício]
+- Inclua personas de usuário primárias e secundárias
+- Cubra fluxos principais e casos de borda]
+
+## Principais funcionalidades
+
+[Liste e descreva as principais funcionalidades do produto. Para cada uma, inclua:
+
+- O que faz
+- Por que é importante
+- Como funciona em alto nível
+- Requisitos funcionais (numerados para clareza)]
+
+## Experiência do usuário
+
+[Descreva a jornada e a experiência do usuário:
+
+- Personas e necessidades
+- Fluxos principais e interações
+- Considerações e requisitos de UI/UX
+- Requisitos de acessibilidade]
+
+## Restrições técnicas de alto nível
+
+[Capture apenas restrições e considerações de alto nível:
+
+- Integrações externas obrigatórias ou sistemas existentes com os quais interagir
+- Exigências de conformidade, regulatórias ou de segurança
+- Metas de desempenho/escala (ex.: TPS esperado, limites superiores de latência)
+- Considerações sobre sensibilidade/privacidade de dados
+- Requisitos de tecnologia ou protocolo não negociáveis
+
+Os detalhes de implementação serão tratados na Especificação Técnica.]
+
+## Fora do escopo
+
+[Declare claramente o que esta feature NÃO incluirá para gerir o escopo:
+
+- Funcionalidades explicitamente excluídas
+- Considerações futuras fora do escopo
+- Limites e restrições
+
+(Nota: riscos técnicos de implementação serão detalhados na Especificação Técnica.)]
+```
+</template>

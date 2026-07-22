@@ -3,8 +3,9 @@
 Projeto agregador de atividades que envolvem múltiplos projetos Bliss
 (localizados no diretório de trabalho local, ex.: `~/Documents/bliss/`).
 
-O fluxo de desenvolvimento de features é orquestrado por **skills** em
-`.claude/skills/`, com gates de aprovação explícitos entre cada fase.
+O fluxo de desenvolvimento de features é orquestrado por **skills** canônicas
+em `.agents/skills/`, com gates de aprovação explícitos entre cada fase. A
+configuração funciona em Claude Code, Cursor e Codex/ChatGPT.
 
 > As regras completas do projeto estão em [`AGENTS.md`](./AGENTS.md).
 
@@ -24,24 +25,31 @@ create-prd  →  create-techspec  →  create-tasks  →  execute-task
 | 1. PRD | `create-prd` | Captura requisitos (faz perguntas antes), foca no O QUÊ/POR QUÊ | `prd.md` |
 | 2. TechSpec | `create-techspec` | Traduz o PRD aprovado em arquitetura e decisões técnicas | `techspec.md` |
 | 3. Tasks | `create-tasks` | Quebra em tarefas + tarefas de QA, bugfix e review | `tasks.md`, `[num]_task.md` |
-| 4. Implementação | `execute-task` | Implementa a próxima tarefa e aciona `@task-reviewer` | código + `tasks.md` atualizado |
+| 4. Implementação | `execute-task` | Implementa a próxima tarefa e aciona o agente `task-reviewer` | código + `tasks.md` atualizado |
 | 5. QA | `execute-qa` | Roda testes, a11y e valida contra PRD/TechSpec/Tasks | `qa.md`, `bugs.md` |
 | 6. Bugfix | `execute-bugfix` | Corrige os bugs de `bugs.md` com testes de regressão | `bugs.md` atualizado |
 | 7. Code Review | `execute-review` | Revisa o `git diff` e a aderência à TechSpec | `codereview.md` |
 
-## Como usar as skills
+## Como usar em cada cliente
 
-Há duas formas equivalentes de acionar uma skill no Claude Code:
+O `AGENTS.md` e as skills em `.agents/skills/` são a fonte comum. Os diretórios
+específicos de cada cliente existem somente como adaptadores.
 
-### 1. Invocação explícita (`/nome`)
+| Cliente | Instruções | Skills | Atalhos/agentes |
+|---------|------------|--------|-----------------|
+| Claude Code | `CLAUDE.md` → `AGENTS.md` | `.claude/skills/` (compatibilidade) | `.claude/agents/` |
+| Cursor | `AGENTS.md` nativo | `.agents/skills/` nativo | `.cursor/commands/`, `.cursor/agents/` |
+| Codex/ChatGPT | `AGENTS.md` nativo | `.agents/skills/` nativo | `.codex/agents/` |
 
-Digite o nome da skill como slash command. Ex.:
+### Invocação explícita (`/nome`)
+
+No Claude Code ou Cursor, digite o nome da skill como slash command. Ex.:
 
 ```
 /create-prd  Preciso de um cadastro de responsável legal para dependentes
 ```
 
-### 2. Acionamento por contexto
+### Acionamento por contexto
 
 Basta descrever a tarefa em linguagem natural — a `description` de cada skill
 permite que o modelo acione a skill correta automaticamente:

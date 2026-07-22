@@ -5,7 +5,7 @@ Os projetos ficam no diretório de trabalho local (ex.: `~/Documents/bliss/`).
 
 ## Primeiro passo
 
-- Leia o `SKILL.md` em `.claude/skills/<nome>/` antes de implementar ou revisar.
+- Leia integralmente o `SKILL.md` aplicável em `.agents/skills/<nome>/` antes de implementar ou revisar. Esse é o catálogo canônico, compartilhado por Claude Code, Cursor e Codex/ChatGPT.
 - Crie ou atualize uma spec em `tasks/prd-[nome]/` antes de trabalhos amplos ou que alterem contratos.
 - Escreva specs e PRDs em Português (pt-BR). Mantenha identificadores de código, campos de API, caminhos e nomes externos no idioma original.
 - Prefira contexto local do repositório antes de suposições. Use `rg` e testes/exemplos existentes antes de criar novos padrões.
@@ -46,7 +46,8 @@ Execute a menor verificação útil primeiro; amplie quando a mudança tocar con
 ## Fluxo de desenvolvimento
 
 Para trabalho de feature, siga esta sequência com gates de aprovação. Cada
-etapa é uma skill em `.claude/skills/` (invoque por `/nome` ou deixe o modelo
+etapa é uma skill em `.agents/skills/` (invoque por `/nome` quando o cliente
+oferecer esse comando ou deixe o modelo
 acioná-la pelo contexto):
 
 ```
@@ -56,7 +57,7 @@ PRD (skill create-prd)
       → aprovação do usuário
         → Tasks (skill create-tasks)
           → aprovação do usuário
-            → Implementação (skill execute-task) + @task-reviewer
+            → Implementação (skill execute-task) + agente task-reviewer
               → QA (skill execute-qa)
                 → Bugfix se necessário (skill execute-bugfix)
                   → Code Review (skill execute-review)
@@ -130,7 +131,17 @@ Use a skill correspondente quando o trabalho segue um fluxo repetível.
 
 ## Context7
 
-Use Context7 para documentação atual antes de alterar código que depende de bibliotecas ou APIs externas. Ver `.claude/skills/context7/SKILL.md`.
+Use Context7 para documentação atual antes de alterar código que depende de bibliotecas ou APIs externas. Ver `.agents/skills/context7/SKILL.md`.
+
+## Compatibilidade entre clientes de IA
+
+- **Fonte comum de instruções:** `AGENTS.md`.
+- **Skills canônicas:** `.agents/skills/`.
+- **Claude Code:** mantém adaptadores em `CLAUDE.md`, `.claude/skills/` e `.claude/agents/`.
+- **Cursor:** usa `AGENTS.md` e `.agents/skills/` nativamente; atalhos ficam em `.cursor/commands/` e agentes especializados em `.cursor/agents/`.
+- **Codex/ChatGPT:** usa `AGENTS.md`, `.agents/skills/` e adaptadores específicos em `.codex/` quando necessários.
+- Não crie uma nova cópia de uma skill para um cliente. Atualize primeiro `.agents/skills/` e mantenha qualquer adaptador legado alinhado.
+- Se um cliente não disponibilizar subagentes, execute as instruções do agente especializado no contexto principal e gere o mesmo artefato esperado.
 
 ## Áreas de alto risco
 
