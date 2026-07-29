@@ -53,6 +53,8 @@ acioná-la pelo contexto):
 ```
 Ideação (skill create-ideation)   [opcional — quando a ideia/direção ainda não está definida]
   → aprovação do usuário
+    → Plano de Execução (skill create-execution-plan)   [opcional — quando a ideia se desdobra em várias frentes/PRDs]
+      → aprovação do plano
     → PRD (skill create-prd)
       → aprovação do usuário
         → TechSpec (skill create-techspec)
@@ -73,14 +75,15 @@ Explorações de ideias (fase anterior ao PRD) ficam em `./ideas/[nome-em-kebab-
 
 ```
 ideas/[nome]/
-└── idea.md
+├── idea.md
+└── plano-execucao.md   (opcional — quando a ideia se desdobra em vários PRDs)
 ```
 
-Uma vez aprovada (`Status: APROVADO PELO USUÁRIO`), a ideia vira insumo para a skill `create-prd`.
+Uma vez aprovada (`Status: APROVADO PELO USUÁRIO`), a ideia vira insumo para a skill `create-prd`. Quando a direção recomendada se desdobra em várias frentes, use antes a skill `create-execution-plan` para decompô-la em pontos de execução (`plano-execucao.md`) e gerar um PRD por ponto. O `plano-execucao.md` canônico mora aqui em `ideas/[nome]/`; a pasta da iniciativa em `tasks/` mantém apenas um ponteiro para ele (ver abaixo).
 
 ## Estrutura de tasks
 
-Armazene todo o trabalho de feature em `./tasks/prd-[nome-em-kebab-case]/`:
+**Feature avulsa** (sem plano de execução) — armazene em `./tasks/prd-[nome-em-kebab-case]/`:
 
 ```
 tasks/prd-[nome]/
@@ -95,6 +98,24 @@ tasks/prd-[nome]/
 └── codereview.md
 ```
 
+**Iniciativa com plano de execução** (vários PRDs de uma mesma ideia) — agrupe tudo sob uma pasta da iniciativa, com uma subpasta por ponto de execução (cada subpasta é um workspace de feature auto-contido, com a mesma estrutura acima):
+
+```
+tasks/[nome-da-iniciativa]/          (mesmo slug da ideia em ideas/)
+├── plano-execucao.md                (ponteiro para ideas/[nome]/plano-execucao.md)
+├── pe-1-[slug-do-ponto]/
+│   ├── prd.md
+│   ├── techspec.md
+│   ├── tasks.md
+│   ├── 1_task.md
+│   ├── qa.md
+│   └── codereview.md
+├── pe-2-[slug-do-ponto]/
+│   └── prd.md ...
+└── pe-3-[slug-do-ponto]/
+    └── prd.md ...
+```
+
 ## Skills
 
 Use a skill correspondente quando o trabalho segue um fluxo repetível.
@@ -104,6 +125,7 @@ Use a skill correspondente quando o trabalho segue um fluxo repetível.
 | Skill | Acionar para… | Não usar se… |
 |-------|--------------|--------------|
 | `create-ideation` | Explorar ideias/soluções/projetos possíveis antes do PRD; divergir, comparar trade-offs e recomendar; gerar `idea.md` | O problema já está definido e você só precisa de requisitos (use `create-prd`) |
+| `create-execution-plan` | Decompor uma ideação aprovada e ampla em pontos de execução (`plano-execucao.md`) e gerar um PRD por ponto via `create-prd` | A ideia recomendada é uma única frente (chame `create-prd` direto) ou a ideação não está aprovada |
 | `create-prd` | Iniciar feature, capturar requisitos, gerar `prd.md` | Já existe PRD aprovado ou é só ajuste técnico |
 | `create-techspec` | Desenhar arquitetura/decisões técnicas a partir do PRD aprovado | `prd.md` não está `APROVADO PELO USUÁRIO` |
 | `create-tasks` | Quebrar a feature em tarefas a partir de PRD + TechSpec aprovados | PRD ou TechSpec não aprovados |

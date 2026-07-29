@@ -1,6 +1,7 @@
 # Conteúdo de trabalho / privado — não versionar
 tasks/
 Memory/
+ideas/
 
 # Configuração local do Claude Code (caminhos e referências internas)
 .claude/settings.local.json

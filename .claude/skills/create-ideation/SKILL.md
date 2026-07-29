@@ -25,7 +25,8 @@ alternativas com honestidade e recomendar um caminho — antes que qualquer
 requisito seja fixado.
 
 <critical>NÃO GERAR O DOCUMENTO SEM ANTES FAZER PERGUNTAS DE ESCLARECIMENTO (USE A SUA FERRAMENTA PARA PERGUNTAR AO USUÁRIO)</critical>
-<critical>DIVIRJA ANTES DE CONVERGIR: apresente pelo menos 3 ideias/soluções candidatas distintas antes de recomendar uma</critical>
+<critical>DIVIRJA ANTES DE CONVERGIR: apresente pelo menos 3 ideias/soluções candidatas distintas antes de recomendar um caminho</critical>
+<critical>A FORMA DA CONVERGÊNCIA DEPENDE DA AMPLITUDE: feature/saída única → recomende UMA direção; projeto/iniciativa multi-saída → recomende um ESCOPO COMPOSTO (a abordagem escolhida expressa como um conjunto de frentes). Em ambos os casos você escolhe UMA abordagem — nunca mantenha candidatas preteridas como frentes.</critical>
 <critical>EM HIPÓTESE ALGUMA DESVIAR DO <template> DE IDEAÇÃO</critical>
 <critical>NÃO INCLUA IMPLEMENTAÇÃO NEM ARQUITETURA DETALHADA NO DOCUMENTO</critical>
 <critical>APÓS GERAR O DOCUMENTO, PARE. NÃO ACIONE PRD, TECHSPEC, TASKS OU IMPLEMENTAÇÃO SEM APROVAÇÃO EXPLÍCITA DO USUÁRIO</critical>
@@ -35,7 +36,7 @@ requisito seja fixado.
 
 1. Ampliar o espaço de soluções: gerar e comparar múltiplas ideias, não apenas a primeira que surgir
 2. Avaliar cada ideia por valor, esforço/complexidade, risco e diferenciação
-3. Recomendar um caminho e mapear os próximos passos (tipicamente seguir para o PRD)
+3. Recomendar um caminho e mapear os próximos passos: PRD (feature/saída única) ou Plano de Execução (projeto/iniciativa multi-saída)
 4. Gerar o documento usando o <template> padronizado e salvá-lo no local correto
 
 ## Referência de arquivo
@@ -77,9 +78,12 @@ Faça perguntas para entender:
 
 ### 5. Convergir (obrigatório)
 
-- Recomende a(s) ideia(s) mais promissora(s) com justificativa clara
-- Liste perguntas em aberto e validações necessárias antes de comprometer requisitos
-- Aponte o próximo passo (geralmente: seguir para a skill `create-prd` da ideia escolhida)
+- Escolha **uma** abordagem entre as candidatas, com justificativa clara com base na matriz — nunca ressuscite candidatas preteridas.
+- Defina a **amplitude da recomendação**, que determina a forma da convergência e o próximo passo:
+  - **Saída única (feature):** a recomendação é uma direção que resolve em uma entrega. Próximo passo: skill `create-prd`.
+  - **Multi-saída (projeto/iniciativa):** a abordagem escolhida se desdobra naturalmente em várias frentes. Converja para um **escopo composto** — descreva a direção e enumere as frentes que a compõem (sem detalhá-las como PRDs). Próximo passo: skill `create-execution-plan`, que decompõe o escopo e gera um PRD por frente.
+- A multiplicidade de um projeto multi-saída vem das partes da direção recomendada, **não** de manter alternativas concorrentes.
+- Liste perguntas em aberto e validações necessárias antes de comprometer requisitos.
 
 ### 6. Rascunhar o documento (obrigatório)
 
@@ -112,7 +116,8 @@ Faça perguntas para entender:
 - Mais de uma opção sempre: uma ideação com uma única alternativa não é ideação
 - Ser honesto sobre riscos e trade-offs; não vender a ideia preferida
 - A ideação define direção e recomendação, **não requisitos nem implementação**
-- Uma ideia aprovada é insumo para o `create-prd`, não um substituto dele
+- Adequar a convergência à amplitude: saída única → uma direção (→ `create-prd`); multi-saída → escopo composto de frentes (→ `create-execution-plan`)
+- Uma ideia aprovada é insumo para o `create-prd` (ou para o `create-execution-plan`, quando multi-saída), não um substituto deles
 
 ## Checklist de perguntas de esclarecimento
 
@@ -129,6 +134,7 @@ Faça perguntas para entender:
 - [ ] Pelo menos 3 ideias candidatas distintas apresentadas
 - [ ] Matriz comparativa preenchida com trade-offs honestos
 - [ ] Recomendação com justificativa e próximos passos
+- [ ] Amplitude declarada (saída única → create-prd; multi-saída → escopo composto de frentes → create-execution-plan)
 - [ ] Perguntas em aberto / validações listadas
 - [ ] Arquivo salvo em `./ideas/[nome-da-ideia]/idea.md`
 - [ ] Documento salvo com status de aprovação
@@ -137,9 +143,10 @@ Faça perguntas para entender:
 
 <critical>NÃO GERAR O DOCUMENTO SEM ANTES FAZER PERGUNTAS DE ESCLARECIMENTO (USE A SUA FERRAMENTA PARA PERGUNTAR AO USUÁRIO)</critical>
 <critical>DIVIRJA ANTES DE CONVERGIR: pelo menos 3 ideias candidatas distintas</critical>
+<critical>CONVERGÊNCIA CONFORME A AMPLITUDE: saída única → uma direção; multi-saída → escopo composto de frentes. Sempre escolha UMA abordagem; nunca mantenha candidatas preteridas.</critical>
 <critical>EM HIPÓTESE ALGUMA DESVIAR DO <template> DE IDEAÇÃO</critical>
 <critical>NÃO INCLUA IMPLEMENTAÇÃO NEM ARQUITETURA DETALHADA</critical>
-<critical>APÓS GERAR O DOCUMENTO, PARE. NÃO ACIONE PRD OU FASES SEGUINTES SEM APROVAÇÃO EXPLÍCITA DO USUÁRIO</critical>
+<critical>APÓS GERAR O DOCUMENTO, PARE. NÃO ACIONE PRD, PLANO DE EXECUÇÃO OU FASES SEGUINTES SEM APROVAÇÃO EXPLÍCITA DO USUÁRIO</critical>
 
 ---
 
@@ -192,8 +199,15 @@ orçamento, dependências, decisões já tomadas.]
 
 ## Recomendação
 
-[Indique a(s) ideia(s) mais promissora(s) e justifique com base na matriz.
-Explique por que as demais foram preteridas neste momento.]
+[Escolha UMA abordagem entre as candidatas e justifique com base na matriz.
+Explique por que as demais foram preteridas neste momento.
+
+Declare a **amplitude da recomendação**:
+- **Saída única (feature):** a direção resolve em uma entrega → próximo passo `create-prd`.
+- **Multi-saída (projeto/iniciativa):** a abordagem se desdobra em várias frentes.
+  Descreva a direção e **enumere as frentes que a compõem** (apenas nome + uma
+  linha do que cada frente resolve — sem detalhar como PRD) → próximo passo
+  `create-execution-plan`.]
 
 ## Perguntas em Aberto e Validações
 
@@ -202,7 +216,10 @@ testar, dados a coletar, stakeholders a consultar, provas de conceito.]
 
 ## Próximos Passos
 
-[Ações concretas. Tipicamente: "Seguir para a skill create-prd da Ideia X".
+[Ações concretas, conforme a amplitude:
+- Saída única: "Seguir para a skill create-prd da Ideia X".
+- Multi-saída: "Seguir para a skill create-execution-plan para decompor o escopo
+  em pontos de execução e gerar um PRD por frente".
 Inclua também validações, spikes ou conversas necessárias.]
 
 ## Fora de Consideração

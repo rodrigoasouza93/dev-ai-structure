@@ -33,7 +33,11 @@ Você é um especialista em criação de PRDs focado em produzir documentos de r
 ## Referência de arquivo
 
 - Nome final do arquivo: `prd.md`
-- Diretório final: `./tasks/prd-[nome-da-feature]/` (nome em kebab-case)
+- Diretório final (feature avulsa): `./tasks/prd-[nome-da-feature]/` (nome em kebab-case)
+- **Quando invocada a partir de um Plano de Execução** (skill `create-execution-plan`),
+  o diretório-alvo é **fornecido pelo plano** — a subpasta da iniciativa
+  `./tasks/[nome-da-iniciativa]/pe-[N]-[slug-do-ponto]/` — e substitui o padrão acima
+  (techspec/tasks/qa/review do ponto ficam nessa mesma subpasta).
 - Regras do projeto: `AGENTS.md`
 
 ## Fluxo de trabalho
@@ -66,8 +70,9 @@ Crie um plano de desenvolvimento do PRD incluindo:
 
 ### 4. Criar diretório e salvar (obrigatório)
 
-- Crie o diretório: `./tasks/prd-[nome-da-feature]/`
-- Salve o PRD em: `./tasks/prd-[nome-da-feature]/prd.md`
+- Crie o diretório: `./tasks/prd-[nome-da-feature]/` (ou o **diretório-alvo informado
+  pelo Plano de Execução**, ex.: `./tasks/[nome-da-iniciativa]/pe-[N]-[slug]/`)
+- Salve o PRD em: `<diretório>/prd.md`
 - Salve o PRD inicialmente com `Status: AGUARDANDO APROVAÇÃO DO USUÁRIO`
 
 ### 5. Relatar resultados
@@ -104,7 +109,7 @@ Crie um plano de desenvolvimento do PRD incluindo:
 - [ ] Plano detalhado criado
 - [ ] PRD gerado com o modelo
 - [ ] Requisitos funcionais numerados incluídos
-- [ ] Arquivo salvo em `./tasks/prd-[nome-da-feature]/prd.md`
+- [ ] Arquivo salvo em `./tasks/prd-[nome-da-feature]/prd.md` (ou na subpasta da iniciativa, quando parte de um Plano de Execução)
 - [ ] PRD salvo com status de aprovação
 - [ ] Caminho final e resumo fornecidos
 - [ ] Execução interrompida aguardando aprovação do usuário
