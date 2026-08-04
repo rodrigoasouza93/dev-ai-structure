@@ -15,8 +15,8 @@ As sete etapas do ciclo de feature são skills. Cada uma só avança quando o
 documento da fase anterior contém `Status: APROVADO PELO USUÁRIO`.
 
 ```
-create-prd  →  create-techspec  →  create-tasks  →  execute-task
-                                                          ↓
+create-prd  →  create-techspec  →  create-tasks  →  execute-task / execute-feature
+                                                                       ↓
                             execute-review  ←  execute-bugfix  ←  execute-qa
 ```
 
@@ -25,6 +25,7 @@ create-prd  →  create-techspec  →  create-tasks  →  execute-task
 | 1. PRD | `create-prd` | Captura requisitos (faz perguntas antes), foca no O QUÊ/POR QUÊ | `prd.md` |
 | 2. TechSpec | `create-techspec` | Traduz o PRD aprovado em arquitetura e decisões técnicas | `techspec.md` |
 | 3. Tasks | `create-tasks` | Quebra em tarefas + tarefas de QA, bugfix e review | `tasks.md`, `[num]_task.md` |
+| 3.5 Execução contínua | `execute-feature` | Executa todas as tasks aprovadas, revisa, corrige e cria commits locais | código + commits por task |
 | 4. Implementação | `execute-task` | Implementa a próxima tarefa e aciona o agente `task-reviewer` | código + `tasks.md` atualizado |
 | 5. QA | `execute-qa` | Roda testes, a11y e valida contra PRD/TechSpec/Tasks | `qa.md`, `bugs.md` |
 | 6. Bugfix | `execute-bugfix` | Corrige os bugs de `bugs.md` com testes de regressão | `bugs.md` atualizado |
@@ -59,6 +60,7 @@ permite que o modelo acione a skill correta automaticamente:
 | "Vamos começar uma feature de X" / "preciso de um PRD" | `create-prd` |
 | "Faça a tech spec dessa feature" (PRD aprovado) | `create-techspec` |
 | "Quebre isso em tarefas" (TechSpec aprovada) | `create-tasks` |
+| "Execute todas as tasks até finalizar" (tasks aprovadas) | `execute-feature` |
 | "Implemente a próxima tarefa" (tasks aprovadas) | `execute-task` |
 | "Faça o QA dessa feature" | `execute-qa` |
 | "Corrija os bugs encontrados" | `execute-bugfix` |

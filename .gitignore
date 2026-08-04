@@ -2,6 +2,7 @@
 tasks/
 Memory/
 ideas/
+apresentacoes/
 
 # Configuração local do Claude Code (caminhos e referências internas)
 .claude/settings.local.json

@@ -15,7 +15,7 @@ Os projetos ficam no diretório de trabalho local (ex.: `~/Documents/bliss/`).
 - **Linguagem**: TypeScript (estritamente, sem JavaScript)
 - **Package manager**: `pnpm` (nunca npm ou yarn)
 - **Runtime**: Node.js 20+
-- **Deploy**: AWS Lambda via Serverless Framework
+- **Deploy**: AWS Lambda, com IaC em Serverless Framework **ou** AWS CDK (ver "Infraestrutura e deploy")
 - **HTTP**: Fastify (maioria), NestJS (bliss-broker-gateway)
 - **Database**: PostgreSQL via Prisma ORM
 - **Testes**: Vitest
@@ -27,10 +27,35 @@ Os projetos ficam no diretório de trabalho local (ex.: `~/Documents/bliss/`).
 - Verificar tipos: `pnpm type-check` ou `pnpm run type-check`
 - Lint: `pnpm lint`
 - Testes: `pnpm test`
-- Deploy staging: `pnpm run deploy:staging`
-- Deploy production: `pnpm run deploy:production`
+- Deploy (Serverless Framework): `pnpm run deploy:staging` / `pnpm run deploy:production`
+- Deploy (AWS CDK): `pnpm exec cdk diff -c environment=dev` / `pnpm exec cdk deploy -c environment=<dev|prod>`, executados dentro de `bliss-cdk/`
 
 Execute a menor verificação útil primeiro; amplie quando a mudança tocar contratos ou infraestrutura compartilhada.
+
+## Infraestrutura e deploy
+
+Os serviços Bliss rodam em AWS Lambda, mas há **duas pilhas de IaC em uso**, e as duas são válidas. Descubra qual o repositório usa antes de mexer em infra: `serverless.ts` na raiz indica Serverless Framework; uma pasta `bliss-cdk/` com `catalog/` indica CDK.
+
+| | Serverless Framework | AWS CDK |
+|---|---|---|
+| Declaração | `serverless.ts` (`@serverless/typescript`) + plugins (`serverless-esbuild`, `serverless-domain-manager`, `serverless-iam-roles-per-function`) | `bliss-cdk/catalog/functions/*.yaml` + `catalog/http-api.yaml`, lidos por `@saude-bliss/bliss-aws-cdk-modules` |
+| Stages | `sandbox` / `production` | `dev` / `prod` (via `-c environment=`) |
+| Deploy | `pnpm run deploy:staging` / `deploy:production` | GitHub Actions com OIDC: `cdk diff` em PR, `cdk deploy` em push na `main` (dev) e em tag `v*` (prod) |
+| API Gateway | REST API v1 (`http`) por padrão | HTTP API v2 |
+| Referências | `bliss-insurer-edge`, `bliss-order-gateway`, `bliss-validation-job` | `bliss-auth-gateway` |
+
+**Como escolher:**
+
+- **Serviço existente**: use a pilha que ele já tem. Migrar de IaC é mudança própria, com PRD/TechSpec dedicados — nunca carona em uma feature.
+- **Serviço novo**: prefira **CDK**, que é o padrão mais recente e dispensa a cadeia de plugins do Serverless. Escolha Serverless Framework quando o serviço precisar de algo que só ele entrega bem no nosso contexto (ex.: `serverless-offline` como parte do fluxo local, ou paridade obrigatória com um serviço irmão que já é Serverless).
+- **Registre a escolha na TechSpec**, em "Principais decisões", com a justificativa — inclusive quando ela seguir o padrão.
+
+**Armadilhas conhecidas:**
+
+- Os nomes de ambiente **não coincidem** entre as pilhas (`sandbox`/`production` vs `dev`/`prod`). Ao integrar dois serviços, confirme a que ambiente cada URL corresponde em vez de inferir pelo nome.
+- No CDK, a infra vive isolada em `bliss-cdk/` com `package.json` e lockfile próprios (pnpm), separada do app. `@saude-bliss/bliss-aws-cdk-modules` é pacote restricted: o install precisa de `NPM_READ_TOKEN`.
+- `cdk synth`/`diff` não exigem credenciais AWS válidas; `deploy`/`destroy` exigem sessão ativa (`aws sso login --profile <perfil>`).
+- Deploy — em qualquer das duas pilhas — **não** aplica migration nem seed. Verifique o banco direto antes de afirmar que uma feature está ativa em um ambiente.
 
 ## Convenções de Git
 
@@ -61,7 +86,7 @@ Ideação (skill create-ideation)   [opcional — quando a ideia/direção ainda
           → aprovação do usuário
             → Tasks (skill create-tasks)
               → aprovação do usuário
-                → Implementação (skill execute-task) + agente task-reviewer
+                → Implementação (skill execute-task por task ou execute-feature em loop) + agente task-reviewer
                   → QA (skill execute-qa)
                     → Bugfix se necessário (skill execute-bugfix)
                       → Code Review (skill execute-review)
@@ -129,6 +154,7 @@ Use a skill correspondente quando o trabalho segue um fluxo repetível.
 | `create-prd` | Iniciar feature, capturar requisitos, gerar `prd.md` | Já existe PRD aprovado ou é só ajuste técnico |
 | `create-techspec` | Desenhar arquitetura/decisões técnicas a partir do PRD aprovado | `prd.md` não está `APROVADO PELO USUÁRIO` |
 | `create-tasks` | Quebrar a feature em tarefas a partir de PRD + TechSpec aprovados | PRD ou TechSpec não aprovados |
+| `execute-feature` | Executar em sequência todas as tasks aprovadas, com review, autocorreção e commit local por task | `tasks.md` não aprovado ou o usuário quiser executar apenas uma task |
 | `execute-task` | Implementar a próxima tarefa de `tasks.md` aprovado | `tasks.md` não aprovado |
 | `execute-qa` | Validar a implementação, rodar testes e a11y, gerar `qa.md` | Ainda não há implementação |
 | `execute-bugfix` | Corrigir os bugs de `bugs.md` com testes de regressão | Não há `bugs.md` com bugs pendentes |
@@ -143,7 +169,7 @@ Use a skill correspondente quando o trabalho segue um fluxo repetível.
 | `nodejs-typescript-conventions` | TS/Node, ESM, pnpm, async/await, sem `any` | Projeto JS puro |
 | `vitest-testing` | Vitest, `vi`, AAA, timers, integração HTTP sem supertest | Jest/Sinon como stack principal de mock |
 | `fastify-rest-http` | Rotas Fastify, plugins, schemas, status codes, HTTP externo | Framework HTTP não for Fastify |
-| `serverless-aws-lambda` | Lambda handlers, Serverless Framework config, stages, event sources | Deploy não for AWS Lambda |
+| `serverless-aws-lambda` | Lambda handlers, event sources, IAM, cold start — e a config em `serverless.ts` quando a pilha for Serverless Framework | Deploy não for AWS Lambda |
 | `prisma-orm` | Modelos Prisma, migrations, queries, transactions, connection pooling | ORM diferente de Prisma |
 | `react-frontend-conventions` | React FC, TSX, Ant Design, hooks, testes de UI (intranet) | Class components, projeto não for intranet |
 | `repo-folder-structure` | Onde criar features, pages, controllers/services/data, Lambda functions | Monorepo ou framework diferente do template |
@@ -151,7 +177,7 @@ Use a skill correspondente quando o trabalho segue um fluxo repetível.
 | `linear` | Ler, criar ou atualizar issues, projetos, labels e cycles no Linear via MCP | MCP do Linear não estiver configurado |
 
 **Ordem sugerida por tarefa:**
-- **Lambda Backend**: `serverless-aws-lambda` → `fastify-rest-http` (se Fastify) → `nodejs-typescript-conventions` → `code-standards-en`
+- **Lambda Backend**: `serverless-aws-lambda` → `fastify-rest-http` (se Fastify) → `nodejs-typescript-conventions` → `code-standards-en`. A parte de handler/event source/IAM da skill vale nas duas pilhas de IaC; a de `serverless.ts` só na pilha Serverless Framework. Para CDK, use `bliss-auth-gateway` como referência de catálogo (não há skill própria ainda).
 - **Backend com Prisma**: acrescentar `prisma-orm`
 - **Frontend (intranet)**: `ui-ux-pro-max` → `react-frontend-conventions` → `repo-folder-structure` → `nodejs-typescript-conventions` → `code-standards-en`
 - **Documentação técnica externa**: `context7` antes de implementar
@@ -184,7 +210,8 @@ Use Context7 para documentação atual antes de alterar código que depende de b
 Solicite confirmação explícita do usuário antes de alterar:
 
 - Schemas de API públicas, payloads de resposta ou comportamento de status codes
-- Configuração de deploy Serverless (domínios, IAM, layers, runtime, packaging)
+- Configuração de deploy, em qualquer das duas pilhas de IaC — domínios, IAM, layers, runtime, packaging (`serverless.ts` ou `bliss-cdk/catalog/`)
+- Troca da pilha de IaC de um serviço existente (Serverless Framework ↔ CDK)
 - Dependências, lockfiles ou configurações do package manager
 - Variáveis de ambiente, secrets ou logging de dados sensíveis
 - Migrations de banco de dados em produção

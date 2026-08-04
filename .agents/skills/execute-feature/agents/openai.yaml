@@ -1,0 +1,4 @@
+interface:
+  display_name: "Executar feature completa"
+  short_description: "Executa e commita todas as tasks aprovadas"
+  default_prompt: "Use $execute-feature para executar todas as tasks aprovadas desta feature até a revisão final."
