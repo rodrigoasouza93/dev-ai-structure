@@ -85,6 +85,10 @@ Para cada mudança de código, verificar:
 - [ ] TypeScript correto, sem `any` (nodejs-typescript-conventions)
 - [ ] Não introduz dependências não autorizadas
 - [ ] Segue os padrões de tratamento de erro
+- [ ] **Densidade de comentários não supera a do entorno** — medir com
+      `grep -cE '^[[:space:]]*(//|/\*|\*)'` nos arquivos do diff e em vizinhos do
+      mesmo diretório. Justificativa que responde "por que esta mudança" pertence
+      ao commit e ao PR, não ao fonte
 - [ ] Código está em inglês (identificadores), docs em Português
 
 ### 4. Verificação de Aderência à TechSpec (Obrigatório)

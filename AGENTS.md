@@ -57,6 +57,47 @@ Os serviços Bliss rodam em AWS Lambda, mas há **duas pilhas de IaC em uso**, e
 - `cdk synth`/`diff` não exigem credenciais AWS válidas; `deploy`/`destroy` exigem sessão ativa (`aws sso login --profile <perfil>`).
 - Deploy — em qualquer das duas pilhas — **não** aplica migration nem seed. Verifique o banco direto antes de afirmar que uma feature está ativa em um ambiente.
 
+## Estilo de código
+
+Código limpo se explica sozinho. **Não encha a implementação de comentários** —
+comentário é exceção, não acompanhamento de cada bloco.
+
+- Prefira nome expressivo, função pequena e early return a um comentário que
+  descreve o que o código já diz. Se precisa de comentário para ser entendido,
+  normalmente falta extrair uma função ou renomear uma variável.
+- Nada de comentário que narre a linha seguinte, marque seções (`// valida`,
+  `// monta o retorno`) ou repita a assinatura em JSDoc.
+- Nada de histórico no código: motivo da mudança, incidente que a originou, "antes
+  era assim" e número de card vivem na **mensagem de commit e no PR**, não no fonte.
+- O que justifica um comentário curto: decisão não óbvia que o leitor desfaria por
+  engano (limite vindo de contrato externo, ordem que importa, workaround de
+  biblioteca) e avisos de segurança/LGPD. Escreva o **porquê**, não o quê.
+- Ao editar arquivo existente, siga a densidade de comentários do arquivo — sem
+  aumentá-la. Em arquivo **novo**, a referência é a densidade do diretório em que
+  ele nasce.
+
+**Antes de escrever, aplique o teste do commit.** Se a frase responde *"por que
+esta mudança"*, ela pertence à mensagem de commit e ao corpo do PR — não ao
+fonte. Comentário serve a quem abre o arquivo daqui a seis meses sem ler o
+histórico; se o texto já está no PR que você acabou de escrever, ele está no
+lugar certo e não deve ser duplicado.
+
+Sinal de excesso, sem exceção conhecida: **comentário mais longo que a mudança
+que ele acompanha**. Trocar um valor de configuração não justifica sete linhas de
+justificativa.
+
+**Antes de commitar, meça** — a regra em prosa não basta, já foi violada mesmo
+com ela escrita aqui:
+
+```bash
+# arquivos que você criou/alterou, e dois ou três vizinhos do mesmo diretório
+grep -cE '^[[:space:]]*(//|/\*|\*)' <seus-arquivos> <vizinhos>
+```
+
+Densidade acima da do entorno significa cortar até empatar. Sobrevive só o
+comentário que um leitor desfaria por engano — limite de contrato externo, ordem
+que importa, workaround de biblioteca, aviso de segurança/LGPD.
+
 ## Convenções de Git
 
 - **Sempre crie uma branch nova antes de implementar uma task** (`execute-task`). Nunca implemente ou commite direto em `main`/`master`. Antes de criar a branch:
@@ -169,6 +210,7 @@ Use a skill correspondente quando o trabalho segue um fluxo repetível.
 | `nodejs-typescript-conventions` | TS/Node, ESM, pnpm, async/await, sem `any` | Projeto JS puro |
 | `vitest-testing` | Vitest, `vi`, AAA, timers, integração HTTP sem supertest | Jest/Sinon como stack principal de mock |
 | `fastify-rest-http` | Rotas Fastify, plugins, schemas, status codes, HTTP externo | Framework HTTP não for Fastify |
+| `figma` | Ler o design da Plataforma Bliss via MCP: localizar telas, decidir onde encaixar UI nova, extrair código de um frame | Tarefa sem interface, ou pedido de desenhar/editar no Figma (acesso é somente leitura) |
 | `serverless-aws-lambda` | Lambda handlers, event sources, IAM, cold start — e a config em `serverless.ts` quando a pilha for Serverless Framework | Deploy não for AWS Lambda |
 | `prisma-orm` | Modelos Prisma, migrations, queries, transactions, connection pooling | ORM diferente de Prisma |
 | `react-frontend-conventions` | React FC, TSX, Ant Design, hooks, testes de UI (intranet) | Class components, projeto não for intranet |
@@ -179,7 +221,7 @@ Use a skill correspondente quando o trabalho segue um fluxo repetível.
 **Ordem sugerida por tarefa:**
 - **Lambda Backend**: `serverless-aws-lambda` → `fastify-rest-http` (se Fastify) → `nodejs-typescript-conventions` → `code-standards-en`. A parte de handler/event source/IAM da skill vale nas duas pilhas de IaC; a de `serverless.ts` só na pilha Serverless Framework. Para CDK, use `bliss-auth-gateway` como referência de catálogo (não há skill própria ainda).
 - **Backend com Prisma**: acrescentar `prisma-orm`
-- **Frontend (intranet)**: `ui-ux-pro-max` → `react-frontend-conventions` → `repo-folder-structure` → `nodejs-typescript-conventions` → `code-standards-en`
+- **Frontend (intranet)**: `figma` (quando houver design) → `ui-ux-pro-max` → `react-frontend-conventions` → `repo-folder-structure` → `nodejs-typescript-conventions` → `code-standards-en`
 - **Documentação técnica externa**: `context7` antes de implementar
 - **Testes**: `vitest-testing` + skill da camada testada
 - **Gestão de tickets**: `linear` para criar/atualizar issues, planejar sprints ou auditar workload

@@ -78,7 +78,22 @@ Riscos/Desafios: [Riscos ou desafios identificados]
 
 <critical>NÃO PULE NENHUM PASSO</critical>
 
-### 5. Revisão
+### 5. Antes de finalizar: densidade de comentários (Obrigatório)
+
+O `AGENTS.md` proíbe encher a implementação de comentários, e a regra em prosa
+já foi violada mesmo estando escrita. Meça antes de commitar:
+
+```bash
+grep -cE '^[[:space:]]*(//|/\*|\*)' <arquivos que voce criou/alterou> <dois ou tres vizinhos>
+```
+
+Se os seus arquivos tiverem densidade maior que a do entorno, corte até empatar.
+Aplique o **teste do commit** em cada comentário que sobrou: se ele responde
+"por que esta mudança", mova para a mensagem de commit e o corpo do PR.
+
+<critical>Comentário mais longo que a mudança que ele acompanha é excesso</critical>
+
+### 6. Revisão
 
 1. Execute o agente de review @task-reviewer
 2. Ajuste os problemas indicados

@@ -140,6 +140,8 @@ Gerar um resumo final:
 - [ ] PRD e TechSpec revisados para contexto
 - [ ] Planejamento de correção feito para cada bug
 - [ ] Correções implementadas na causa raiz (sem gambiarras)
+- [ ] Densidade de comentários não supera a do entorno (ver "Estilo de código" no
+      `AGENTS.md`); o porquê da correção vai no commit e no PR, não no fonte
 - [ ] Testes de regressão criados para cada bug
 - [ ] Todos os testes existentes continuam passando
 - [ ] Verificação de tipagem sem erros
